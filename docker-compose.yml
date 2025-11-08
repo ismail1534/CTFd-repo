@@ -1,6 +1,8 @@
 services:
   ctfd:
     build: .
+    ports:
+      - "8000:8000"
     user: root
     restart: always
     environment:
@@ -21,21 +23,24 @@ services:
     depends_on:
       - db
     networks:
-      default:
-      internal:
+      - default
+      - internal
 
   nginx:
     image: nginx:stable
     restart: always
-    volumes:
-      - ./conf/nginx/http.conf:/etc/nginx/nginx.conf
-      - ./conf/nginx/fullchain.pem:/certificates/fullchain.pem:ro
-      - ./conf/nginx/privkey.pem:/certificates/privkey.pem:ro
-    ports:
-      - 80:80
-      - 443:443
     depends_on:
       - ctfd
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certificates:/certificates:ro
+      - ./conf/nginx:/etc/nginx/conf.d:ro
+      - ./CTFd:/var/www/CTFd
+    networks:
+      - default
+      - internal
 
   db:
     image: mariadb:10.11
@@ -49,15 +54,14 @@ services:
     volumes:
       - .data/mysql:/var/lib/mysql
     networks:
-      internal:
-    # This command is required to set important mariadb defaults
+      - internal
     command:
       [
         mysqld,
         --character-set-server=utf8mb4,
         --collation-server=utf8mb4_unicode_ci,
         --wait_timeout=28800,
-        --log-warnings=0,
+        --log-warnings=0
       ]
 
   cache:
@@ -66,7 +70,7 @@ services:
     volumes:
       - .data/redis:/data
     networks:
-      internal:
+      - internal
 
 networks:
   default:

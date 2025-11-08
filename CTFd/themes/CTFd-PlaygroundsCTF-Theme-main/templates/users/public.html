@@ -6,16 +6,16 @@
 {% block content %}
 	<div class="jumbotron">
 		<div class="container">
-			<h1>{{ user.name }}</h1>
+			<h3>{{ user.name }}</h3>
 
 			{% if user.team_id %}
-				<h2>
+				<h4>
 					<a href="{{ url_for('teams.public', team_id=user.team_id) }}">
 						<span class="badge badge-secondary">
 							{{ user.team.name }}
 						</span>
 					</a>
-				</h2>
+				</h4>
 			{% endif %}
 
 			{% if user.oauth_id %}
@@ -46,16 +46,16 @@
 			{% endfor %}
 
 			<div>
-				<h2 class="text-center">
+				<h4 class="text-center">
 					{% if account.place %}
 						{{ account.place }} <small>place</small>
 					{% endif %}
-				</h2>
-				<h2 class="text-center">
+				</h4>
+				<h4 class="text-center">
 					{% if account.place %}
 						{{ account.score }} <small>points</small>
 					{% endif %}
-				</h2>
+				</h4>
 			</div>
 
 			<div class="pt-3">
